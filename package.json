@@ -9,8 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "autoprefixer": "^10.4.16",
-    "azure-functions-core-tools": "^3.0.5373",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "ejs": "^3.1.9",
@@ -25,6 +23,7 @@
     "tailwindcss": "^3.3.3"
   },
   "devDependencies": {
+    "depcheck": "^1.4.6",
     "nodemon": "^3.0.1"
   }
 }
