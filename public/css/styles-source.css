@@ -1,0 +1,27 @@
+/* Importa las utilidades de Tailwind CSS */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+/* Tu CSS personalizado comienza aquí */
+
+body {
+    background-color: #f7fafc;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .button {
+    background-color: #3490dc;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  /* Tu CSS personalizado termina aquí */
+  
