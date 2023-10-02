@@ -1,0 +1,39 @@
+/* styles.css */
+
+/* Colores de fondo */
+.bg-blue-500 {
+    background-color: #3b82f6;
+  }
+  
+  .bg-green-500 {
+    background-color: #10b981;
+  }
+  
+  /* Colores de texto */
+  .text-white {
+    color: #fff;
+  }
+  
+  .text-black {
+    color: #000;
+  }
+  
+  /* Espaciado */
+  .m-4 {
+    margin: 1rem;
+  }
+  
+  .mt-8 {
+    margin-top: 2rem;
+  }
+  
+  /* Tamaño de texto */
+  .text-lg {
+    font-size: 1.125rem; /* 18px */
+  }
+  
+  /* Otras clases de Tailwind CSS... */
+  
+  /* Puedes seguir agregando más clases aquí */
+  
+  
