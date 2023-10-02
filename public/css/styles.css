@@ -1,2 +1,40 @@
+/* styles.css */
 
-/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3N0eWxlcy5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEiLCJmaWxlIjoic3R5bGVzLmNzcyJ9 */
+/* Colores de fondo */
+.bg-blue-500 {
+    background-color: #3b82f6;
+  }
+  
+  .bg-green-500 {
+    background-color: #10b981;
+  }
+  
+  /* Colores de texto */
+  .text-white {
+    color: #fff;
+  }
+  
+  .text-black {
+    color: #000;
+  }
+  
+  /* Espaciado */
+  .m-4 {
+    margin: 1rem;
+  }
+  
+  .mt-8 {
+    margin-top: 2rem;
+  }
+  
+  /* Tamaño de texto */
+  .text-lg {
+    font-size: 1.125rem; /* 18px */
+  }
+  
+  /* Otras clases de Tailwind CSS... */
+  
+  /* Puedes seguir agregando más clases aquí */
+  
+  
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3N0eWxlcy5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEiLCJmaWxlIjoic3R5bGVzLmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi8qIHN0eWxlcy5jc3MgKi9cclxuXHJcbi8qIENvbG9yZXMgZGUgZm9uZG8gKi9cclxuLmJnLWJsdWUtNTAwIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICMzYjgyZjY7XHJcbiAgfVxyXG4gIFxyXG4gIC5iZy1ncmVlbi01MDAge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogIzEwYjk4MTtcclxuICB9XHJcbiAgXHJcbiAgLyogQ29sb3JlcyBkZSB0ZXh0byAqL1xyXG4gIC50ZXh0LXdoaXRlIHtcclxuICAgIGNvbG9yOiAjZmZmO1xyXG4gIH1cclxuICBcclxuICAudGV4dC1ibGFjayB7XHJcbiAgICBjb2xvcjogIzAwMDtcclxuICB9XHJcbiAgXHJcbiAgLyogRXNwYWNpYWRvICovXHJcbiAgLm0tNCB7XHJcbiAgICBtYXJnaW46IDFyZW07XHJcbiAgfVxyXG4gIFxyXG4gIC5tdC04IHtcclxuICAgIG1hcmdpbi10b3A6IDJyZW07XHJcbiAgfVxyXG4gIFxyXG4gIC8qIFRhbWHDsW8gZGUgdGV4dG8gKi9cclxuICAudGV4dC1sZyB7XHJcbiAgICBmb250LXNpemU6IDEuMTI1cmVtOyAvKiAxOHB4ICovXHJcbiAgfVxyXG4gIFxyXG4gIC8qIE90cmFzIGNsYXNlcyBkZSBUYWlsd2luZCBDU1MuLi4gKi9cclxuICBcclxuICAvKiBQdWVkZXMgc2VndWlyIGFncmVnYW5kbyBtw6FzIGNsYXNlcyBhcXXDrSAqL1xyXG4gIFxyXG4gICJdfQ== */
