@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css">
+    <style>
+        /* Estilos personalizados si es necesario */
+        .menu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #333;
+            z-index: 1000;
+            transition: left 0.3s ease-in-out;
+        }
+
+        .menu.active {
+            left: 0;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .menu-button {
+            display: block;
+            width: 100%;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body class="bg-blue-900 text-white">
+    <!-- Barra de navegación -->
+    <div class="bg-opacity-70 bg-blue-600 p-4">
+        <button id="menu-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full ml-4">
+            Menú
+        </button>
+    </div>
+
+    <!-- Menú desplegable de cursos -->
+    <div id="menu" class="menu">
+        <h2 class="text-xl font-semibold text-white p-4">Unidades</h2>
+        <ul id="unidades-list" class="p-4">
+            <!-- Las unidades se cargarán aquí -->
+        </ul>
+    </div>
+
+    <!-- Overlay para el menú -->
+    <div id="menu-overlay" class="menu-overlay"></div>
+
+    <!-- Contenido del dashboard -->
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-semibold text-center mb-4">Dashboard</h1>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="cursos-container">
+            <!-- Los cursos se cargarán aquí -->
+        </div>
+    </div>
+
+    <script>
+        // JavaScript para mostrar/ocultar el menú de unidades
+        const menuButton = document.getElementById('menu-button');
+        const menu = document.getElementById('menu');
+        const unidadesList = document.getElementById('unidades-list');
+        const cursosContainer = document.getElementById('cursos-container');
+
+        menuButton.addEventListener('click', () => {
+            menu.classList.toggle('active');
+            document.getElementById('menu-overlay').style.display = 'block';
+            // Agregar un mensaje para mostrar la solicitud
+            console.log("Solicitud para cargar unidades realizada");
+            fetch('/unidades') // Asegúrate de que esta ruta devuelva la lista de unidades desde el servidor
+                .then(response => response.json())
+                .then(unidades => {
+                    // Agregar un mensaje para mostrar las unidades
+                    console.log("Unidades cargadas:", unidades);
+                    unidadesList.innerHTML = ''; // Limpiar la lista antes de agregar unidades
+                    unidades.forEach(unidad => {
+                        const li = document.createElement('li');
+                        li.textContent = unidad.nombre;
+                        li.className = 'menu-button'; // Aplica la clase de estilo
+                        unidadesList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al cargar las unidades: ' + error);
+                });
+        });
+
+        // Cargar cursos
+        fetch('/cursos') // Asegúrate de que esta ruta devuelva la lista de cursos desde el servidor
+            .then(response => response.json())
+            .then(cursos => {
+                cursos.forEach(curso => {
+                    const cursoDiv = document.createElement('div');
+                    cursoDiv.className = 'bg-white p-4 rounded-lg shadow-md text-center';
+
+                    const titulo = document.createElement('h2');
+                    titulo.className = 'text-lg font-semibold text-blue-500 mb-2';
+                    titulo.textContent = curso.nombre;
+
+                    const descripcion = document.createElement('p');
+                    descripcion.className = 'text-blue-900'; // Texto en azul
+                    descripcion.textContent = curso.descripcion;
+
+                    const entrarTareaBtn = document.createElement('button');
+                    entrarTareaBtn.className = 'bg-green-300 text-white font-semibold py-2 px-4 rounded-full mb-2';
+                    entrarTareaBtn.textContent = 'Entrar Tarea';
+                    entrarTareaBtn.addEventListener('click', () => {
+                        // Realizar acción al hacer clic en "Entrar Tarea"
+                        fetch(`/cursos/ver-pdf/${curso.curso_id}`)
+                            .then(response => response.blob())
+                            .then(pdfBlob => {
+                                const pdfUrl = URL.createObjectURL(pdfBlob);
+                                window.open(pdfUrl, '_blank');
+                            })
+                            .catch(error => {
+                                console.error('Error al cargar el PDF: ' + error);
+                            });
+                    });
+
+                    const verTareaBtn = document.createElement('button');
+                    verTareaBtn.className = 'bg-green-300 text-white font-semibold py-2 px-4 rounded-full';
+                    verTareaBtn.textContent = 'Ver Tarea';
+                    verTareaBtn.addEventListener('click', () => {
+                        // Realizar acción al hacer clic en "Ver Tarea"
+                        console.log('Ver Tarea', curso.nombre);
+                    });
+
+                    const verVideoBtn = document.createElement('button');
+                    verVideoBtn.className = 'bg-green-300 text-white font-semibold py-2 px-4 rounded-full';
+                    verVideoBtn.textContent = 'Ver Video';
+                    verVideoBtn.addEventListener('click', () => {
+                        // Realizar acción al hacer clic en "Ver Video"
+                        console.log('Ver Video', curso.nombre);
+                    });
+
+                    cursoDiv.appendChild(titulo);
+                    cursoDiv.appendChild(descripcion);
+                    cursoDiv.appendChild(entrarTareaBtn);
+                    cursoDiv.appendChild(verTareaBtn);
+                    cursoDiv.appendChild(verVideoBtn);
+
+                    cursosContainer.appendChild(cursoDiv);
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar los cursos: ' + error);
+            });
+
+        // Cerrar el menú al hacer clic fuera de él
+        document.getElementById('menu-overlay').addEventListener('click', () => {
+            menu.classList.remove('active');
+            document.getElementById('menu-overlay').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
+

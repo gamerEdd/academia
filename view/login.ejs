@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css">
+    <style>
+        /* Estilos personalizados si es necesario */
+    </style>
+</head>
+<body class="bg-blue-900 text-white">
+    <div class="h-screen flex items-center justify-center relative">
+        <!-- Contenido del formulario de inicio de sesión -->
+        <div class="bg-opacity-70 bg-blue-600 p-8 rounded-lg shadow-lg text-center relative z-10">
+            <h1 class="text-4xl font-semibold mb-4">Iniciar Sesión</h1>
+            <form action="/login" method="POST" class="mb-6">
+                <!-- Campos de inicio de sesión -->
+                <div class="mb-4">
+                    <input type="text" name="user" placeholder="Usuario" class="bg-blue-100 border-2 border-blue-500 rounded-full py-2 px-4 w-full" required>
+                </div>
+                <div class="mb-4">
+                    <input type="password" name="contrasena" placeholder="Contraseña" class="bg-blue-100 border-2 border-blue-500 rounded-full py-2 px-4 w-full" required>
+                </div>
+                <!-- Botón de inicio de sesión -->
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Iniciar Sesión</button>
+            </form>
+            <a href="/" class="text-blue-300 hover:underline">Volver a la Pantalla de Presentación</a>
+        </div>
+    </div>
+</body>
+</html>
