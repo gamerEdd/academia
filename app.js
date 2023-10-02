@@ -13,33 +13,34 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-  res.render('presentacion');
+  // Redirige directamente al dashboard sin pasar por la página de inicio de sesión
+  res.render('dashboard');
 });
 
-app.get('/login', (req, res) => {
-  res.render('login');
-});
+// app.get('/login', (req, res) => {
+//   res.render('login');
+// });
 
-app.post('/login', (req, res) => {
-  const { user, contrasena } = req.body;
+// app.post('/login', (req, res) => {
+//   const { user, contrasena } = req.body;
 
-  // Lógica de autenticación con la base de datos
-  const sql = 'SELECT * FROM usuarios WHERE user = ? AND contrasena = ?';
-  connection.query(sql, [user, contrasena], (error, results) => {
-    if (error) {
-      console.error('Error al consultar la base de datos:', error);
-      res.redirect('/login');
-    } else {
-      if (results.length === 1) {
-        console.log('Inicio de sesión exitoso.');
-        res.render('dashboard');
-      } else {
-        console.log('Inicio de sesión fallido.');
-        res.redirect('/login');
-      }
-    }
-  });
-});
+//   // Lógica de autenticación con la base de datos
+//   const sql = 'SELECT * FROM usuarios WHERE user = ? AND contrasena = ?';
+//   connection.query(sql, [user, contrasena], (error, results) => {
+//     if (error) {
+//       console.error('Error al consultar la base de datos:', error);
+//       res.redirect('/login');
+//     } else {
+//       if (results.length === 1) {
+//         console.log('Inicio de sesión exitoso.');
+//         res.render('dashboard');
+//       } else {
+//         console.log('Inicio de sesión fallido.');
+//         res.redirect('/login');
+//       }
+//     }
+//   });
+// });
 
 // Ruta para usar el enrutador de cursos
 app.use('/cursos', cursosRouter);
