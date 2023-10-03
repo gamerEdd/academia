@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'gatewaycorp'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CE7E2BAE0AF14CC1BFEAE27F4780DA54 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D1D9F5186FD6404A835BFCC5AF05E076 }}
           package: .
