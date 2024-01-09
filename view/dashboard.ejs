@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +17,21 @@
             background-color: #333;
             z-index: 1000;
             transition: left 0.3s ease-in-out;
+            overflow-y: auto; /* Agrega la propiedad para la barra de desplazamiento vertical */
+            scrollbar-color: #4a5568 #1a202c; /* Establece los colores de la barra de desplazamiento en navegadores compatibles con el estándar */
+            scrollbar-width: thin; /* Establece el ancho de la barra de desplazamiento en navegadores compatibles con el estándar */
+        }
+
+        .menu::-webkit-scrollbar {
+            width: 12px; /* Ancho de la barra de desplazamiento en navegadores basados en WebKit (Chrome, Safari, etc.) */
+        }
+
+        .menu::-webkit-scrollbar-thumb {
+            background-color: #4a5568; /* Color del pulgar de la barra de desplazamiento en navegadores basados en WebKit */
+        }
+
+        .menu::-webkit-scrollbar-track {
+            background-color: #1a202c; /* Color de la pista de la barra de desplazamiento en navegadores basados en WebKit */
         }
 
         .menu.active {
@@ -45,14 +61,26 @@
         .menu-button:hover {
             background-color: #555;
         }
+
+        .youtube-video {
+            width: 100%;
+            height: 400px;
+            /* Ajusta la altura según tus necesidades */
+        }
     </style>
 </head>
+
 <body class="bg-blue-900 text-white">
     <!-- Barra de navegación -->
     <div class="bg-opacity-70 bg-blue-600 p-4">
-        <button id="menu-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full ml-4">
+        <button id="menu-button" class="bg-blue-500 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded-full ml-4">
             Menú
         </button>
+        <% if (isAdmin) { %>
+        <button id="admin-button" class="bg-red-500 hover-bg-red-700 text-white font-bold py-2 px-4 rounded-full ml-4">
+            Administración de Cursos
+        </button>
+        <% } %>
     </div>
 
     <!-- Menú desplegable de cursos -->
@@ -68,9 +96,13 @@
 
     <!-- Contenido del dashboard -->
     <div class="container mx-auto p-4">
-        <h1 class="text-3xl font-semibold text-center mb-4">Dashboard</h1>
+        <h1 class="text-3xl font-semibold text-center mb-4" id="unidad-nombre">Dashboard</h1>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="cursos-container">
             <!-- Los cursos se cargarán aquí -->
+        </div>
+        <!-- Contenedor para el video de YouTube -->
+        <div id="video-container" class="youtube-video">
+            <!-- El video de YouTube se incrustará aquí -->
         </div>
     </div>
 
@@ -80,6 +112,8 @@
         const menu = document.getElementById('menu');
         const unidadesList = document.getElementById('unidades-list');
         const cursosContainer = document.getElementById('cursos-container');
+        const unidadNombre = document.getElementById('unidad-nombre');
+        const videoContainer = document.getElementById('video-container');
 
         menuButton.addEventListener('click', () => {
             menu.classList.toggle('active');
@@ -96,6 +130,97 @@
                         const li = document.createElement('li');
                         li.textContent = unidad.nombre;
                         li.className = 'menu-button'; // Aplica la clase de estilo
+                        li.addEventListener('click', () => {
+                            // Realiza una solicitud AJAX para cargar las clases de la unidad seleccionada
+                            fetch(`/cursos/unidades/${unidad.unidad_id}`) // Asegúrate de que esta ruta devuelva las clases de la unidad desde el servidor
+                                .then(response => response.json())
+                                .then(cursos => {
+                                    // Agregar un mensaje para mostrar las clases
+                                    console.log(`Clases de ${unidad.nombre} cargadas:`, cursos);
+                                    unidadNombre.textContent = `Unidad: ${unidad.nombre}`;
+                                    cursosContainer.innerHTML = ''; // Limpiar el contenedor de cursos antes de agregar las nuevas clases
+                                    videoContainer.innerHTML = ''; // Limpiar el contenedor de video
+                                    cursos.forEach(curso => {
+                                        const cursoDiv = document.createElement('div');
+                                        cursoDiv.className = 'bg-white p-4 rounded-lg shadow-md text-center';
+
+                                        const titulo = document.createElement('h2');
+                                        titulo.className = 'text-lg font-semibold text-blue-500 mb-2';
+                                        titulo.textContent = curso.nombre;
+
+                                        const descripcion = document.createElement('p');
+                                        descripcion.className = 'text-blue-900'; // Texto en azul
+                                        descripcion.textContent = curso.descripcion;
+
+                                        // Botones para cada curso
+                                        const infoBtn = document.createElement('button');
+                                        infoBtn.className = 'bg-green-300 text-white font-semibold py-2 px-4 rounded-full mb-2';
+                                        infoBtn.textContent = 'Info';
+                                        infoBtn.addEventListener('click', () => {
+                                            // Cargar el PDF al hacer clic en el botón "Info"
+                                            console.log('Cargar PDF para', curso.nombre);
+                                            window.open(`/cursos/ver-pdf/${curso.curso_id}`);
+                                        });
+
+                                        const worksheetBtn = document.createElement('button');
+                                        worksheetBtn.className = 'bg-blue-300 text-white font-semibold py-2 px-4 rounded-full mb-2';
+                                        worksheetBtn.textContent = 'Worksheet';
+                                        worksheetBtn.addEventListener('click', () => {
+                                            // Realizar solicitud para obtener el enlace al worksheet
+                                            fetch(`/cursos/worksheet/${curso.curso_id}`)
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    if (data.enlacesheet) {
+                                                        // Abre el enlace al worksheet in a new window
+                                                        window.open(data.enlacesheet);
+                                                    } else {
+                                                        console.log('El enlace al worksheet está vacío para', curso.nombre);
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error al obtener el enlace al worksheet:', error);
+                                                });
+                                        });
+
+                                        // ...
+
+                                        const videoBtn = document.createElement('button');
+                                        videoBtn.className = 'bg-red-300 text-white font-semibold py-2 px-4 rounded-full';
+                                        videoBtn.textContent = 'Video';
+                                        videoBtn.addEventListener('click', () => {
+                                            // Realizar solicitud para obtener la URL del video de YouTube desde la base de datos
+                                            fetch(`/cursos/video/${curso.curso_id}`)
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    if (data.enlaceyoutube) {
+                                                        console.log('URL del video de YouTube:', data.enlaceyoutube);
+                                                        // Redirigir al usuario al enlace del video de YouTube
+                                                        window.open(data.enlaceyoutube, '_blank');
+                                                    } else {
+                                                        console.log('La URL del video de YouTube está vacía para', curso.nombre);
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error al obtener la URL del video de YouTube:', error);
+                                                });
+                                        });
+
+                                        // ...
+
+                                        cursoDiv.appendChild(titulo);
+                                        cursoDiv.appendChild(descripcion);
+                                        cursoDiv.appendChild(infoBtn);
+                                        cursoDiv.appendChild(worksheetBtn);
+                                        cursoDiv.appendChild(videoBtn);
+
+                                        cursosContainer.appendChild(cursoDiv);
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error('Error al cargar las clases:', error);
+                                });
+                        });
+
                         unidadesList.appendChild(li);
                     });
                 })
@@ -104,73 +229,27 @@
                 });
         });
 
-        // Cargar cursos
-        fetch('/cursos') // Asegúrate de que esta ruta devuelva la lista de cursos desde el servidor
-            .then(response => response.json())
-            .then(cursos => {
-                cursos.forEach(curso => {
-                    const cursoDiv = document.createElement('div');
-                    cursoDiv.className = 'bg-white p-4 rounded-lg shadow-md text-center';
-
-                    const titulo = document.createElement('h2');
-                    titulo.className = 'text-lg font-semibold text-blue-500 mb-2';
-                    titulo.textContent = curso.nombre;
-
-                    const descripcion = document.createElement('p');
-                    descripcion.className = 'text-blue-900'; // Texto en azul
-                    descripcion.textContent = curso.descripcion;
-
-                    const entrarTareaBtn = document.createElement('button');
-                    entrarTareaBtn.className = 'bg-green-300 text-white font-semibold py-2 px-4 rounded-full mb-2';
-                    entrarTareaBtn.textContent = 'Entrar Tarea';
-                    entrarTareaBtn.addEventListener('click', () => {
-                        // Realizar acción al hacer clic en "Entrar Tarea"
-                        fetch(`/cursos/ver-pdf/${curso.curso_id}`)
-                            .then(response => response.blob())
-                            .then(pdfBlob => {
-                                const pdfUrl = URL.createObjectURL(pdfBlob);
-                                window.open(pdfUrl, '_blank');
-                            })
-                            .catch(error => {
-                                console.error('Error al cargar el PDF: ' + error);
-                            });
-                    });
-
-                    const verTareaBtn = document.createElement('button');
-                    verTareaBtn.className = 'bg-green-300 text-white font-semibold py-2 px-4 rounded-full';
-                    verTareaBtn.textContent = 'Ver Tarea';
-                    verTareaBtn.addEventListener('click', () => {
-                        // Realizar acción al hacer clic en "Ver Tarea"
-                        console.log('Ver Tarea', curso.nombre);
-                    });
-
-                    const verVideoBtn = document.createElement('button');
-                    verVideoBtn.className = 'bg-green-300 text-white font-semibold py-2 px-4 rounded-full';
-                    verVideoBtn.textContent = 'Ver Video';
-                    verVideoBtn.addEventListener('click', () => {
-                        // Realizar acción al hacer clic en "Ver Video"
-                        console.log('Ver Video', curso.nombre);
-                    });
-
-                    cursoDiv.appendChild(titulo);
-                    cursoDiv.appendChild(descripcion);
-                    cursoDiv.appendChild(entrarTareaBtn);
-                    cursoDiv.appendChild(verTareaBtn);
-                    cursoDiv.appendChild(verVideoBtn);
-
-                    cursosContainer.appendChild(cursoDiv);
-                });
-            })
-            .catch(error => {
-                console.error('Error al cargar los cursos: ' + error);
-            });
+        // Cargar cursos iniciales (puedes cargar cursos por defecto al inicio si lo deseas)
+        // Esto es opcional y depende de tu lógica de aplicación
 
         // Cerrar el menú al hacer clic fuera de él
         document.getElementById('menu-overlay').addEventListener('click', () => {
             menu.classList.remove('active');
             document.getElementById('menu-overlay').style.display = 'none';
         });
+
+        // JavaScript para manejar el botón de administración de cursos
+        const adminButton = document.getElementById('admin-button');
+        adminButton.addEventListener('click', () => {
+            // Agregar un mensaje en la consola cuando se presiona el botón de administración de cursos
+            console.log("Botón de administración de cursos presionado");
+            
+            // Redirigir a la página de administración de cursos
+            window.location.href = '/adminCursos';
+        });
     </script>
 </body>
+
 </html>
+
 

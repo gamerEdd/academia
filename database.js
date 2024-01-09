@@ -2,11 +2,20 @@ const mysql = require('mysql');
 
 // Configuración de la conexión a la base de datos
 const dbConfig = {
-  host: 'academy.mysql.database.azure.com',
-  user: 'Academia',
-  password: 'Eddgenial199503',
+  host: 'exvacorp.mysql.database.azure.com',
+  user: 'exvacorp',
+  password: 'Eddgenial199503.*',
   database: 'academia_educativa',
-  port: 3306, // Cambia esto al número de puerto de tu servidor de MySQL si es diferente
+  port: 3306, // Cambia esto al número de puerto de tu servidor de MySQL si es diferente*/
+  
+  /*
+  host: 'localhost',
+  user: 'root',
+  password: 'edd1234',
+  database: 'academia_educativa',
+  port: 3306, // Cambia esto al número de puerto de tu servidor de MySQL si es diferente*
+  */
+  
 };
 
 // Crear una pool de conexiones a la base de datos

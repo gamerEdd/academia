@@ -1,28 +1,78 @@
-<!-- view/presentacion.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pantalla de Presentación</title>
+    <title>Bienvenidos a Gateway Corporation</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css">
     <style>
         /* Estilos personalizados si es necesario */
+        .circle {
+            width: 150px;
+            height: 150px;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 20px;
+        }
+
+        .info-box {
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .text-dark {
+            color: #333; /* Color de texto negro oscuro */
+        }
     </style>
 </head>
 <body class="bg-blue-900 text-white">
-    <div class="h-screen flex items-center justify-center relative">
-        <!-- Imagen de fondo -->
-        <img src="/images/background.jpg" alt="Fondo" class="absolute inset-0 w-full h-full object-cover z-0">
+    <!-- Contenedor principal para centrar el contenido verticalmente -->
+    <div class="h-screen flex flex-col justify-center items-center">
         <!-- Contenido de presentación -->
-        <div class="bg-opacity-70 bg-blue-600 p-8 rounded-lg shadow-lg text-center relative z-10">
+        <div class="bg-opacity-70 bg-blue-600 p-8 rounded-lg shadow-lg text-center mt-8">
             <h1 class="text-4xl font-semibold mb-4">¡Bienvenido a Gateway Corporation!</h1>
-            <p class="text-lg mb-6">Vive la Mejor Experiencia de Aprender Ingles</p>
-           <!-- views/presentacion.ejs -->
-<!-- ... (otros contenidos) -->
-<a href="/login" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Iniciar Sesión</a>
-<!-- ... (otros contenidos) -->
+            <p class="text-lg mb-6">Vive la Mejor Experiencia de Aprender Inglés</p>
+            <a href="/login" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Iniciar Sesión</a>
+            <!-- Nuevo botón "No tienes cuenta, regístrate" -->
+            <a href="/registro" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mt-2">No tienes cuenta, regístrate</a>
+        </div>
+
+        <!-- Contenedor para círculos y cuadros (centrado) -->
+        <div class="flex justify-center items-center mt-8">
+            <!-- Círculo y cuadro para imagen de Misión -->
+            <div class="text-center">
+                <div class="circle">
+                    <!-- Puedes agregar una imagen aquí -->
+                </div>
+                <!-- Cuadro sombreado debajo del círculo para Misión -->
+                <div class="info-box mt-4">
+                    <!-- Agrega la misión aquí -->
+                    <h2 class="text-2xl font-semibold mb-2 text-dark">Misión</h2>
+                    <p class="text-lg text-dark">Nuestra misión es proporcionar una educación de alta calidad en el idioma inglés y ayudar a nuestros estudiantes a alcanzar sus metas lingüísticas.</p>
+                </div>
+            </div>
+
+            <!-- Círculo y cuadro para imagen de Visión -->
+            <div class="text-center">
+                <div class="circle">
+                    <!-- Puedes agregar una imagen aquí -->
+                </div>
+                <!-- Cuadro sombreado debajo del círculo para Visión -->
+                <div class="info-box mt-4">
+                    <!-- Agrega la visión aquí -->
+                    <h2 class="text-2xl font-semibold mb-2 text-dark">Visión</h2>
+                    <p class="text-lg text-dark">Nuestra visión es ser líderes en la enseñanza del inglés, brindando las mejores herramientas y recursos para el aprendizaje.</p>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Footer con información del creador -->
+    <footer class="bg-blue-800 text-white text-center py-2">
+        Creado por: [Nombre del Creador] - [Año de Creación]
+    </footer>
 </body>
 </html>

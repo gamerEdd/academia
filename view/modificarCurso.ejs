@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Curso</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css">
+</head>
+<body class="bg-blue-900 text-black flex items-center justify-center h-screen">
+    <div class="text-center">
+        <h1 class="text-3xl font-semibold mb-4">Modificar Curso</h1>
+        <form method="POST" action="/cursos/modificar/<%= curso.curso_id %>" class="mb-4">
+            <div class="mb-4">
+                <label for="nombre" class="block text-lg font-semibold">Nombre del Curso</label>
+                <input type="text" id="nombre" name="nombre" value="<%= curso.nombre %>" class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <label for="descripcion" class="block text-lg font-semibold">Descripción</label>
+                <textarea id="descripcion" name="descripcion" class="w-full p-2 border rounded" rows="4"><%= curso.descripcion %></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="archivo_pdf" class="block text-lg font-semibold">PDF del Curso</label>
+                <input type="file" id="archivo_pdf" name="archivo_pdf" class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <label for="enlacesheet" class="block text-lg font-semibold">Enlace al Worksheet</label>
+                <input type="text" id="enlacesheet" name="enlacesheet" value="<%= curso.enlacesheet %>" class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <label for "enlaceyoutube" class="block text-lg font-semibold">Enlace a YouTube</label>
+                <input type="text" id="enlaceyoutube" name="enlaceyoutube" value="<%= curso.enlaceyoutube %>" class="w-full p-2 border rounded">
+            </div>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full">
+                Guardar Cambios
+            </button>
+        </form>
+        <a href="/cursos/eliminar/<%= curso.curso_id %>" class="text-red-500 hover:underline">Eliminar Curso</a>
+    </div>
+</body>
+</html>

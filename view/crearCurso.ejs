@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Curso</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Crear Nuevo Curso</h1>
+    <form method="POST" action="/cursos/crear">
+        <label for="nombre">Nombre del Curso:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion" name="descripcion" rows="4" required></textarea>
+        <label for="archivo_pdf">PDF del Curso:</label>
+        <input type="file" id="archivo_pdf" name="archivo_pdf">
+        <label for="enlacesheet">Enlace al Worksheet:</label>
+        <input type="text" id="enlacesheet" name="enlacesheet">
+        <label for="enlaceyoutube">Enlace a YouTube:</label>
+        <input type="text" id="enlaceyoutube" name="enlaceyoutube">
+        <label for="unidad">Unidad:</label>
+        <select id="unidad" name="unidad" required>
+            <option value="" disabled>Selecciona una unidad</option>
+            <!-- Las opciones de unidad se cargarán automáticamente aquí -->
+        </select>
+        <input type="submit" value="Crear Curso">
+    </form>
+    <script>
+        fetch('/cursos/obtener-unidades') // Asegúrate de que esta ruta esté correctamente definida en tu servidor
+            .then((response) => response.json())
+            .then((unidades) => {
+                const unidadSelect = document.getElementById('unidad');
+
+                unidades.forEach((unidad) => {
+                    const option = document.createElement('option');
+                    option.value = unidad.unidad_id;
+                    option.text = unidad.nombre;
+                    unidadSelect.appendChild(option);
+                });
+            })
+            .catch((error) => {
+                console.error('Error al cargar las unidades:', error);
+            });
+    </script>
+</body>
+</html>
