@@ -1,11 +1,11 @@
-<!-- adminCursos.ejs -->
+<!-- adminCurso.ejs -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado</title>
+    <title>Administrar Cursos</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css">
     <style>
         /* Estilos personalizados si es necesario */
@@ -13,20 +13,17 @@
 </head>
 <body class="bg-blue-900 text-white">
     <div class="container mx-auto p-4">
-        <h1 class="text-3xl font-semibold mb-4">Listado de Cursos</h1>
+        <h1 class="text-3xl font-semibold mb-4">Administrar Cursos</h1>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <% cursos.forEach(curso => { %>
                 <div class="bg-opacity-70 bg-blue-600 rounded-lg shadow-md p-4">
                     <a href="/curso/<%= curso.curso_id %>" class="text-lg font-semibold hover:underline"><%= curso.nombre %></a>
                     <p class="text-gray-100 mt-2"><%= curso.descripcion %></p>
-                    <% if (curso.estado === 'E') { %>
-                        <a href="/descargar-pdf/<%= curso.curso_id %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full inline-block mt-4">1</a>
-                    <% } %>
-                    <% if (curso.estado === 'E') { %>
-                        <a href="/descargar-worksheet/<%= curso.curso_id %>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full inline-block mt-2">2</a>
-                    <% } %>
-                    
+                    <div class="flex justify-between mt-4">
+                        <a href="/modificar-curso/<%= curso.curso_id %>" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full inline-block">Modificar</a>
+                        <a href="/eliminar-curso/<%= curso.curso_id %>" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full inline-block">Eliminar</a>
+                    </div>
                 </div>
             <% }); %>
         </div>

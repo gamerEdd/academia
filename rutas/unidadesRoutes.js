@@ -17,5 +17,19 @@ router.get('/', (req, res) => {
   });
 });
 
+// Ruta para renderizar adminCursos.ejs
+router.get('/adminCursos', (req, res) => {
+  // Obtén las unidades de la base de datos
+  db.query('SELECT * FROM unidades', (error, unidades) => {
+    if (error) {
+      console.error('Error al obtener las unidades:', error);
+      res.status(500).send('Error al obtener las unidades.');
+    } else {
+      // Renderiza adminCursos.ejs y pasa las unidades como datos
+      res.render('adminCursos', { unidades: unidades });
+    }
+  });
+});
+
 
 module.exports = router;

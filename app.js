@@ -121,11 +121,23 @@ app.get('/adminCursos', (req, res) => {
 });
 
 
-// En lugar de definir manualmente los cursos aquí, los obtendremos de la ruta '/adminCursos'
-app.get('/adminCursos', (req, res) => {
-  // Redirige a la ruta '/adminCursos' manejada por cursosRoutes
-  res.redirect('/cursos/adminCursos');
+// Ruta para mostrar el formulario de modificación de cursos
+app.get('/modificar-curso/:id', (req, res) => {
+  const courseId = req.params.id;
+
+  // Realiza una consulta a la base de datos para obtener los detalles del curso
+  const query = 'SELECT * FROM cursos WHERE curso_id = ?';
+  connection.query(query, [courseId], (error, results) => {
+    if (error) {
+      console.error('Error al obtener el curso:', error);
+      res.status(500).json({ error: 'Error al obtener el curso.' });
+    } else {
+      const curso = results[0]; // Obtén el primer resultado ya que debería ser único
+      res.render('modificarCurso', { curso }); // Renderiza la plantilla 'modificarCurso.ejs' y pasa los datos del curso
+    }
+  });
 });
+
 
 app.get('/registro', (req, res) => {
   res.render('registro'); // Asegúrate de que 'registro' sea el nombre correcto de tu archivo de vista EJS para el formulario de registro
