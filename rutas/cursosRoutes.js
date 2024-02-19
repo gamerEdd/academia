@@ -1,59 +1,44 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../database'); // Reemplaza '../database' con la ruta adecuada a tu archivo de conexión a la base de datos
+const db = require('../database'); // Asegúrate de reemplazar '../database' con la ruta correcta a tu archivo de conexión a la base de datos
 
 // Ruta para obtener todos los cursos
 router.get('/', (req, res) => {
-  // Realiza una consulta a la base de datos para obtener todos los cursos
   const sql = 'SELECT * FROM cursos';
-  
+
   db.query(sql, (error, results) => {
     if (error) {
       console.error('Error al obtener los cursos:', error);
       res.status(500).json({ error: 'Error al obtener los cursos.' });
     } else {
       const cursos = results;
-      // Renderiza la vista de administración de cursos con la lista de cursos
-      res.render('adminCursos', { cursos }); // Asegúrate de que 'adminCursos' sea la vista adecuada
-    }
-  });
-});
-router.get('/', (req, res) => {
-  // Realiza una consulta a la base de datos para obtener todos los cursos
-  const sql = 'SELECT * FROM cursos';
-  
-  db.query(sql, (error, results) => {
-    if (error) {
-      console.error('Error al obtener los cursos:', error);
-      res.status(500).json({ error: 'Error al obtener los cursos.' });
-    } else {
-      const cursos = results;
-      
       // Renderiza la vista de administración de cursos con la lista de cursos
       res.render('adminCursos', { cursos }); // Asegúrate de que 'adminCursos' sea la vista adecuada
     }
   });
 });
 
-// Ruta para obtener el PDF del curso por su curso_id
-router.get('/ver-pdf/:curso_id', (req, res) => {
+// Ruta para obtener el enlace al PDF del curso por su curso_id
+router.get('/verpdfenlace/:curso_id', (req, res) => {
   const cursoId = req.params.curso_id;
 
-  // Realiza una consulta a la base de datos para obtener el PDF del curso por su curso_id
+  // Realiza una consulta a la base de datos para obtener el enlace al PDF por curso_id
   const sql = 'SELECT archivo_pdf FROM cursos WHERE curso_id = ?';
 
   db.query(sql, [cursoId], (error, results) => {
     if (error) {
-      console.error('Error al obtener el PDF del curso:', error);
-      res.status(500).json({ error: 'Error al obtener el PDF del curso.' });
+      console.error('Error al obtener el enlace al PDF:', error);
+      res.status(500).json({ error: 'Error al obtener el enlace al PDF.' });
     } else {
       if (results.length === 1) {
-        const pdfData = results[0].archivo_pdf;
+        const pdfLink = results[0].archivo_pdf;
 
-        // Establece el encabezado de respuesta para el PDF
-        res.contentType('application/pdf');
-        // Envía el PDF como respuesta
-        res.send(pdfData);
+        if (pdfLink) {
+          res.status(200).json({ enlacepdf: pdfLink }); // Modifica la propiedad a 'enlacepdf'
+        } else {
+          console.log('El enlace al PDF está vacío para el curso_id', cursoId);
+          res.status(404).json({ error: 'El enlace al PDF está vacío.' });
+        }
       } else {
         // No se encontró el curso
         res.status(404).json({ error: 'Curso no encontrado.' });
@@ -61,12 +46,12 @@ router.get('/ver-pdf/:curso_id', (req, res) => {
     }
   });
 });
+
 // Ruta para obtener los cursos de una unidad específica
 router.get('/unidades/:unidad_id', (req, res) => {
   const unidadId = req.params.unidad_id;
 
   // Realiza una consulta a la base de datos para obtener los cursos de la unidad
-  //const sql = 'SELECT * FROM cursos WHERE unidad_id = ?';
   const sql = 'SELECT * FROM cursos WHERE unidad_id = ? ORDER BY CAST(SUBSTRING(nombre, 1, CASE WHEN LENGTH(nombre) = 1 THEN 1 ELSE LENGTH(nombre) END) AS UNSIGNED), nombre';
 
   db.query(sql, [unidadId], (error, results) => {
@@ -106,6 +91,35 @@ router.get('/worksheet/:curso_id', (req, res) => {
     }
   });
 });
+
+router.get('/verpdf/:curso_id', (req, res) => {
+  const cursoId = req.params.curso_id;
+
+  // Realiza una consulta a la base de datos para obtener el enlace al worksheet por curso_id
+  const sql = 'SELECT archivo_pdf FROM cursos WHERE curso_id = ?';
+
+  db.query(sql, [cursoId], (error, results) => {
+    if (error) {
+      console.error('Error al obtener el enlace al worksheet:', error);
+      res.status(500).json({ error: 'Error al obtener el enlace al worksheet.' });
+    } else {
+      if (results.length === 1) {
+        const worksheetLink = results[0].enlacesheet;
+
+        if (worksheetLink) {
+          res.status(200).json({ enlacesheet: worksheetLink });
+        } else {
+          // El enlace al worksheet está vacío
+          res.status(404).json({ error: 'El enlace al worksheet está vacío.' });
+        }
+      } else {
+        // No se encontró el curso
+        res.status(404).json({ error: 'Curso no encontrado.' });
+      }
+    }
+  });
+});
+
 router.get('/video/:curso_id', (req, res) => {
   const cursoId = req.params.curso_id;
 
@@ -134,7 +148,6 @@ router.get('/video/:curso_id', (req, res) => {
   });
 });
 
-
 // Ruta para obtener todas las unidades
 router.get('/obtener-unidades', (req, res) => {
   db.query('SELECT * FROM unidades', (error, results) => {
@@ -148,9 +161,6 @@ router.get('/obtener-unidades', (req, res) => {
   });
 });
 
-
-
-
 router.get('/dashboard', (req, res) => {
   // Supongamos que tienes la lógica para verificar el rol del usuario aquí
   const usuario = req.user; // Supongamos que req.user contiene información sobre el usuario actual
@@ -162,7 +172,6 @@ router.get('/dashboard', (req, res) => {
 
   res.render('dash', { isAdmin });
 });
-
 
 // Ruta para modificar un curso por su curso_id
 router.get('/modificar/:curso_id', (req, res) => {
@@ -191,11 +200,6 @@ router.get('/modificar/:curso_id', (req, res) => {
   });
 });
 
-
-// Ruta para mostrar el formulario de creación de cursos
-
-
-
 // Ruta para eliminar un curso por su curso_id
 router.get('/eliminar/:curso_id', (req, res) => {
   const cursoId = req.params.curso_id;
@@ -214,13 +218,11 @@ router.get('/eliminar/:curso_id', (req, res) => {
   });
 });
 
-// Ruta para obtener todos los cursos
-// En cursosRoutes.js
+// Ruta para mostrar la vista de administración de cursos
 router.get('/adminCursos', (req, res) => {
-  // Realiza una consulta a la base de datos para obtener los cursos
-  const sql = 'SELECT cursos.*, unidades.nombre AS nombre_unidad FROM cursos JOIN unidades ON cursos.unidad_id = unidades.unidad_id';
+  const sql = 'SELECT * FROM cursos';
 
-  db.query(query, (error, results) => {
+  db.query(sql, (error, results) => {
     if (error) {
       console.error('Error al obtener los cursos:', error);
       res.status(500).json({ error: 'Error al obtener los cursos.' });
@@ -237,7 +239,7 @@ router.post('/modificar/:curso_id', (req, res) => {
 
   // Realiza la actualización en la base de datos
   const sql = 'UPDATE cursos SET nombre = ?, descripcion = ?, enlacesheet = ?, enlaceyoutube = ? WHERE curso_id = ?';
-  
+
   db.query(sql, [nombre, descripcion, enlacesheet, enlaceyoutube, cursoId], (error, results) => {
     if (error) {
       console.error('Error al modificar el curso:', error);
@@ -248,7 +250,6 @@ router.post('/modificar/:curso_id', (req, res) => {
     }
   });
 });
-
 
 // Ruta para mostrar el formulario de creación de cursos
 router.get('/crear', (req, res) => {
@@ -276,42 +277,10 @@ router.post('/crear', (req, res) => {
   });
 });
 
-// ... (otros manejadores de rutas)
-
-// Ruta para obtener todos los cursos
-router.get('/', (req, res) => {
-  const sql = 'SELECT * FROM cursos';
-
-  db.query(sql, (error, results) => {
-    if (error) {
-      console.error('Error al obtener los cursos:', error);
-      res.status(500).json({ error: 'Error al obtener los cursos.' });
-    } else {
-      const cursos = results;
-      // Renderiza la vista de administración de cursos con la lista de cursos
-      res.render('adminCursos', { cursos }); // Asegúrate de que 'adminCursos' sea la vista adecuada
-    }
-  });
+// Ruta para manejar el botón presionado
+router.post('/botonPresionado', (req, res) => {
+  console.log('Botón presionado');
+  res.send('Mensaje recibido: Botón presionado');
 });
-
-// ... (otros manejadores de rutas)
-
-// Ruta para mostrar la vista de administración de cursos
-router.get('/adminCursos', (req, res) => {
-  const sql = 'SELECT * FROM cursos';
-
-  db.query(sql, (error, results) => {
-    if (error) {
-      console.error('Error al obtener los cursos:', error);
-      res.status(500).json({ error: 'Error al obtener los cursos.' });
-    } else {
-      const cursos = results;
-      // Renderiza la vista de administración de cursos con la lista de cursos
-      res.render('adminCursos', { cursos }); // Asegúrate de que 'adminCursos' sea la vista adecuada
-    }
-  });
-});
-
-// ... (otros manejadores de rutas)
 
 module.exports = router;

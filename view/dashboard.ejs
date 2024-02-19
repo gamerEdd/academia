@@ -17,21 +17,27 @@
             background-color: #333;
             z-index: 1000;
             transition: left 0.3s ease-in-out;
-            overflow-y: auto; /* Agrega la propiedad para la barra de desplazamiento vertical */
-            scrollbar-color: #4a5568 #1a202c; /* Establece los colores de la barra de desplazamiento en navegadores compatibles con el estándar */
-            scrollbar-width: thin; /* Establece el ancho de la barra de desplazamiento en navegadores compatibles con el estándar */
+            overflow-y: auto;
+            /* Agrega la propiedad para la barra de desplazamiento vertical */
+            scrollbar-color: #4a5568 #1a202c;
+            /* Establece los colores de la barra de desplazamiento en navegadores compatibles con el estándar */
+            scrollbar-width: thin;
+            /* Establece el ancho de la barra de desplazamiento en navegadores compatibles con el estándar */
         }
 
         .menu::-webkit-scrollbar {
-            width: 12px; /* Ancho de la barra de desplazamiento en navegadores basados en WebKit (Chrome, Safari, etc.) */
+            width: 12px;
+            /* Ancho de la barra de desplazamiento en navegadores basados en WebKit (Chrome, Safari, etc.) */
         }
 
         .menu::-webkit-scrollbar-thumb {
-            background-color: #4a5568; /* Color del pulgar de la barra de desplazamiento en navegadores basados en WebKit */
+            background-color: #4a5568;
+            /* Color del pulgar de la barra de desplazamiento en navegadores basados en WebKit */
         }
 
         .menu::-webkit-scrollbar-track {
-            background-color: #1a202c; /* Color de la pista de la barra de desplazamiento en navegadores basados en WebKit */
+            background-color: #1a202c;
+            /* Color de la pista de la barra de desplazamiento en navegadores basados en WebKit */
         }
 
         .menu.active {
@@ -77,10 +83,11 @@
             Menú
         </button>
         <% if (isAdmin) { %>
-        <button id="admin-button" class="bg-red-500 hover-bg-red-700 text-white font-bold py-2 px-4 rounded-full ml-4">
-            Administración de Cursos
-        </button>
-        <% } %>
+            <button id="admin-button"
+                class="bg-red-500 hover-bg-red-700 text-white font-bold py-2 px-4 rounded-full ml-4">
+                Administración de Cursos
+            </button>
+            <% } %>
     </div>
 
     <!-- Menú desplegable de cursos -->
@@ -153,13 +160,25 @@
                                         descripcion.textContent = curso.descripcion;
 
                                         // Botones para cada curso
-                                        const infoBtn = document.createElement('button');
-                                        infoBtn.className = 'bg-green-300 text-white font-semibold py-2 px-4 rounded-full mb-2';
-                                        infoBtn.textContent = 'Info';
-                                        infoBtn.addEventListener('click', () => {
-                                            // Cargar el PDF al hacer clic en el botón "Info"
-                                            console.log('Cargar PDF para', curso.nombre);
-                                            window.open(`/cursos/ver-pdf/${curso.curso_id}`);
+                                        const worksheet1Btn = document.createElement('button');
+                                        worksheet1Btn.className = 'bg-blue-300 text-white font-semibold py-2 px-4 rounded-full mb-2';
+                                        worksheet1Btn.textContent = 'Info';
+                                        worksheet1Btn.addEventListener('click', () => {
+                                            // Realizar solicitud para obtener el enlace al worksheet
+                                            fetch(`/cursos/verpdf/${curso.curso_id}`)
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    if (data.enlacesheet) {
+                                                        console.log('Abriendo el enlace al worksheet:', data.enlacesheet);
+                                                        // Abre el enlace al worksheet en una nueva ventana
+                                                        window.open(data.enlacesheet);
+                                                    } else {
+                                                        console.log('El enlace al worksheet está vacío para', curso.nombre);
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error al obtener el enlace al worksheet:', error);
+                                                });
                                         });
 
                                         const worksheetBtn = document.createElement('button');
@@ -171,7 +190,8 @@
                                                 .then(response => response.json())
                                                 .then(data => {
                                                     if (data.enlacesheet) {
-                                                        // Abre el enlace al worksheet in a new window
+                                                        console.log('Abriendo el enlace al worksheet:', data.enlacesheet);
+                                                        // Abre el enlace al worksheet en una nueva ventana
                                                         window.open(data.enlacesheet);
                                                     } else {
                                                         console.log('El enlace al worksheet está vacío para', curso.nombre);
@@ -182,11 +202,9 @@
                                                 });
                                         });
 
-                                        // ...
-
                                         const videoBtn = document.createElement('button');
-                                        videoBtn.className = 'bg-red-300 text-white font-semibold py-2 px-4 rounded-full';
-                                        videoBtn.textContent = 'Video';
+                                        videoBtn.className = 'bg-green-300 text-white font-semibold py-2 px-4 rounded-full';
+                                        videoBtn.textContent = 'Info';
                                         videoBtn.addEventListener('click', () => {
                                             // Realizar solicitud para obtener la URL del video de YouTube desde la base de datos
                                             fetch(`/cursos/video/${curso.curso_id}`)
@@ -205,13 +223,12 @@
                                                 });
                                         });
 
-                                        // ...
-
                                         cursoDiv.appendChild(titulo);
                                         cursoDiv.appendChild(descripcion);
-                                        cursoDiv.appendChild(infoBtn);
-                                        cursoDiv.appendChild(worksheetBtn);
                                         cursoDiv.appendChild(videoBtn);
+                                        //cursoDiv.appendChild(worksheet1Btn);
+                                        cursoDiv.appendChild(worksheetBtn);
+                                        
 
                                         cursosContainer.appendChild(cursoDiv);
                                     });
@@ -243,7 +260,7 @@
         adminButton.addEventListener('click', () => {
             // Agregar un mensaje en la consola cuando se presiona el botón de administración de cursos
             console.log("Botón de administración de cursos presionado");
-            
+
             // Redirigir a la página de administración de cursos
             window.location.href = '/adminCursos';
         });
@@ -251,5 +268,3 @@
 </body>
 
 </html>
-
-
