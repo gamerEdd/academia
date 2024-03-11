@@ -108,14 +108,24 @@ app.use('/usuarios', usuariosRouter);
 
 app.get('/adminCursos', (req, res) => {
   // Realiza una consulta a la base de datos para obtener todos los cursos
-  const query = 'SELECT * FROM cursos';
-  connection.query(query, (error, results) => {
-    if (error) {
-      console.error('Error al obtener los cursos:', error);
+  const queryCursos = 'SELECT * FROM cursos';
+  const queryUnidades = 'SELECT * FROM unidades'; // Asegúrate de que esta consulta es válida
+
+  connection.query(queryCursos, (errorCursos, resultadosCursos) => {
+    if (errorCursos) {
+      console.error('Error al obtener los cursos:', errorCursos);
       res.status(500).json({ error: 'Error al obtener los cursos.' });
     } else {
-      const cursos = results;
-      res.render('adminCursos', { cursos });
+      connection.query(queryUnidades, (errorUnidades, resultadosUnidades) => {
+        if (errorUnidades) {
+          console.error('Error al obtener las unidades:', errorUnidades);
+          res.status(500).json({ error: 'Error al obtener las unidades.' });
+        } else {
+          const cursos = resultadosCursos;
+          const unidades = resultadosUnidades;
+          res.render('adminCursos', { cursos, unidades });
+        }
+      });
     }
   });
 });

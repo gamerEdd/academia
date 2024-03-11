@@ -1,5 +1,3 @@
-<!-- adminCurso.ejs -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,16 +8,32 @@
     <style>
         /* Estilos personalizados si es necesario */
     </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5426301371420117"
+    crossorigin="anonymous"></script>
 </head>
 <body class="bg-blue-900 text-white">
     <div class="container mx-auto p-4">
         <h1 class="text-3xl font-semibold mb-4">Administrar Cursos</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Menú desplegable para filtrar por unidades -->
+        <div class="mb-4">
+            <label for="unidadSelect" class="block text-lg font-semibold">Filtrar por Unidad:</label>
+            <select id="unidadSelect" class="bg-gray-200 px-4 py-2 rounded-lg">
+                <option value="">Todas las Unidades</option>
+                <!-- Iterar sobre las unidades disponibles -->
+                <% unidades.forEach(unidad => { %>
+                    <option value="<%= unidad.id %>"><%= unidad.nombre %></option>
+                <% }); %>
+            </select>
+        </div>
+
+        <!-- Listado de cursos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="cursosContainer">
             <% cursos.forEach(curso => { %>
-                <div class="bg-opacity-70 bg-blue-600 rounded-lg shadow-md p-4">
+                <div class="bg-opacity-70 bg-blue-600 rounded-lg shadow-md p-4 curso" data-unidad="<%= curso.unidad_id %>">
                     <a href="/curso/<%= curso.curso_id %>" class="text-lg font-semibold hover:underline"><%= curso.nombre %></a>
                     <p class="text-gray-100 mt-2"><%= curso.descripcion %></p>
+                    <p class="text-gray-100 mt-2">Unidad: <%= curso.nombre_unidad %></p> <!-- Agregado: Nombre de la unidad -->
                     <div class="flex justify-between mt-4">
                         <a href="/modificar-curso/<%= curso.curso_id %>" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full inline-block">Modificar</a>
                         <a href="/eliminar-curso/<%= curso.curso_id %>" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full inline-block">Eliminar</a>
@@ -30,5 +44,29 @@
 
         <a href="/dashboard" class="text-blue-300 hover:underline mt-8">Volver al Panel de Control</a>
     </div>
+
+    <script>
+        // JavaScript para filtrar los cursos por unidad cuando se selecciona una unidad en el menú desplegable
+        document.getElementById('unidadSelect').addEventListener('change', function() {
+            const unidadId = this.value;
+            const cursosContainer = document.getElementById('cursosContainer');
+
+            // Realizar una solicitud AJAX para obtener los cursos asociados a la unidad seleccionada
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', '/cursos/unidad/' + unidadId, true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Actualizar el contenido de la página con los nuevos cursos recibidos del servidor
+                    cursosContainer.innerHTML = xhr.responseText;
+                } else {
+                    console.error('Error al cargar los cursos:', xhr.statusText);
+                }
+            };
+            xhr.onerror = function() {
+                console.error('Error de red al cargar los cursos.');
+            };
+            xhr.send();
+        });
+    </script>
 </body>
 </html>
