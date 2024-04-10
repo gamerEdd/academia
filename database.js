@@ -2,7 +2,7 @@ const mysql = require('mysql');
 
 // Configuración de la conexión a la base de datos
 const dbConfig = {
-  host: 'exvacorpr.mysql.database.azure.com',
+  host: 'gatewaycorp.mysql.database.azure.com',
   user: 'exvacorp',
   password: 'Eddgenial199503.*',
   database: 'academia_educativa',
